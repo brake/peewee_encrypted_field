@@ -18,23 +18,40 @@ Uses simple fernet implementation https://github.com/heroku/fernet-py
 
 Idea caught from SQLAlchemy's `EncryptedType <http://sqlalchemy-utils.readthedocs.io/en/latest/data_types.html#module-sqlalchemy_utils.types.encrypted>`_.
 
+Features
+--------
+
+
 Usage
 -----
+
+At first, import module
 
 .. code-block:: python
 
   from peewee import *
   from peewee_encrypted_field import EncryptedField
 
-  ...
+Then, define the model with :code:`EncryptedField`
+
+.. code-block:: python
   
   class SecureTable(BaseModel):
       sensitive_data = EncryptedField()
 
       class Meta:
           db_table = 'SecureTable'
-          
-  ...
+
+After, configure field's encryption key
+
+.. code-block:: python
   
-  
+  SecureTable.sensitive_data.key = 'some raw key data'
+
+Finally, save and retrieve data in a Peewee's usual manner
+
+.. code-block:: python
+
+  new_secret = SecureTable(sensitive_data = 'My New BIG Secret')
+  new_secret.save()
             
