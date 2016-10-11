@@ -6,7 +6,7 @@ peewee_encrypted_field
         :target: https://opensource.org/licenses/MIT 
         
 .. image:: https://badge.fury.io/gh/brake%2Fpeewee_encrypted_field.svg
-    :target: https://badge.fury.io/gh/brake%2Fpeewee_encrypted_field
+        :target: https://badge.fury.io/gh/brake%2Fpeewee_encrypted_field
         
 .. image:: https://img.shields.io/badge/Python-2.7-red.svg
 
@@ -21,4 +21,20 @@ Idea caught from SQLAlchemy's `EncryptedType <http://sqlalchemy-utils.readthedoc
 Usage
 -----
 
-TBD
+.. code-block:: python
+
+  from peewee import *
+  from peewee_encrypted_field import EncryptedField
+
+  ...
+  
+  class SecureTable(BaseModel):
+      sensitive_data = EncryptedField()
+
+      class Meta:
+          db_table = 'SecureTable'
+          
+  ...
+  
+  
+            
