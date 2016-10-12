@@ -10,17 +10,38 @@ peewee_encrypted_field
         
 .. image:: https://img.shields.io/badge/Python-2.7-red.svg
 
+.. _fernet-py: https://github.com/heroku/fernet-py
+.. _Fernet tokens:
+.. _fernet spec: https://github.com/fernet/spec
+.. _Pycrypto: https://pypi.python.org/pypi/pycrypto
+
 Encrypted field for `Peewee ORM <https://github.com/coleifer/peewee>`_ models to save data in DB in encrypted form.
 
-Data stored in DataBase as `Fernet tokens <https://github.com/fernet/spec>`_ . After you define an encryption key all cryptography will be performed transparently for your application.
+Data stored in DataBase as `Fernet tokens`_. After you define an encryption key all cryptography will be performed transparently for your application.
 
 Uses simple fernet implementation https://github.com/heroku/fernet-py
 
 Idea caught from SQLAlchemy's `EncryptedType <http://sqlalchemy-utils.readthedocs.io/en/latest/data_types.html#module-sqlalchemy_utils.types.encrypted>`_.
 
+Implementation details
+----------------------
+
+A fernet-py_ package can use Pycrypto_ or `M2Crypto <https://pypi.python.org/pypi/M2Crypto>`_ as backend (`details <https://github.com1/heroku/fernet-py#installation>`_). Same belongs to this module due to its dependency from fernet-py_. Note that ``pip`` uses Pycrypto_ as a default dependency when install fernet-py_. 
+**Length of entire key is 32 bytes**, 16 bytes per both signing and encryption keys, as stated in `specification <https://github.com/fernet/spec/blob/master/Spec.md#key-format>`_
+
 Features
 --------
 
+You have to set key as a property of appropriate ``EncryptedField``
+
+Installation
+------------
+
+``pip install peewee_encrypted_field``
+
+or, if you downloaded source, 
+
+``python setup.py install``
 
 Usage
 -----
@@ -46,12 +67,13 @@ After, configure field's encryption key
 
 .. code-block:: python
   
-  SecureTable.sensitive_data.key = 'some raw key data'
+  SecureTable.sensitive_data.key = key_derivation_fn()  # a hypotetical key derivation 
+                                                        # function returning 32 byte key
 
 Finally, save and retrieve data in a Peewee's usual manner
 
 .. code-block:: python
 
-  new_secret = SecureTable(sensitive_data = 'My New BIG Secret')
+  new_secret = SecureTable(sensitive_data='My New BIG Secret')
   new_secret.save()
             
