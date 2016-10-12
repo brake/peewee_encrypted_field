@@ -23,16 +23,31 @@ Uses simple fernet implementation https://github.com/heroku/fernet-py
 
 Idea caught from SQLAlchemy's `EncryptedType <http://sqlalchemy-utils.readthedocs.io/en/latest/data_types.html#module-sqlalchemy_utils.types.encrypted>`_.
 
-Implementation details
+Contents
+********
+
+* `Implementation Details`_ 
+* `Features`_
+* `Installation`_
+* `Usage`_
+* `Key Derivation Example`_
+
+.. _Implementation Details:
+
+Implementation Details
 ----------------------
 
 A fernet-py_ package can use Pycrypto_ or `M2Crypto <https://pypi.python.org/pypi/M2Crypto>`_ as backend (`details <https://github.com1/heroku/fernet-py#installation>`_). Same belongs to this module due to its dependency from fernet-py_. Note that ``pip`` uses Pycrypto_ as a default dependency when install fernet-py_. 
 **Length of entire key is 32 bytes**, 16 bytes per both signing and encryption keys, as stated in `specification <https://github.com/fernet/spec/blob/master/Spec.md#key-format>`_
 
+.. _Features:
+
 Features
 --------
 
 You have to set key as a property of appropriate ``EncryptedField``
+
+.. _Installation:
 
 Installation
 ------------
@@ -42,6 +57,8 @@ Installation
 or, if you downloaded source, 
 
 ``python setup.py install``
+
+.. _Usage:
 
 Usage
 -----
@@ -76,4 +93,10 @@ Finally, save and retrieve data in a Peewee's usual manner
 
   new_secret = SecureTable(sensitive_data='My New BIG Secret')
   new_secret.save()
-            
+
+.. _Key Derivation Example:
+
+Key Derivation Example
+----------------------
+
+
