@@ -38,14 +38,15 @@ Implementation Details
 ----------------------
 
 A fernet-py_ package can use Pycrypto_ or `M2Crypto <https://pypi.python.org/pypi/M2Crypto>`_ as backend (`details <https://github.com1/heroku/fernet-py#installation>`_). Same belongs to this module due to its dependency from fernet-py_. Note that ``pip`` uses Pycrypto_ as a default dependency when install fernet-py_. 
-**Length of entire key is 32 bytes**, 16 bytes per both signing and encryption keys, as stated in `specification <https://github.com/fernet/spec/blob/master/Spec.md#key-format>`_
+**Length of entire key is 32 bytes**, 16 bytes per both signing and encryption keys, as stated in `specification <https://github.com/fernet/spec/blob/master/Spec.md#key-format>`_.
 
 .. _Features:
 
 Features
 --------
 
-You have to set key as a property of appropriate ``EncryptedField``
+You have to set ``key`` as a property of appropriate ``EncryptedField``. **You need to set this property once per** ``Model`` **per** ``Model`` **'s** ``Field``.
+If you attempt to set ``key`` property for a ``Field`` whose ``key`` already has been set, exception ``EncryptedField.KeyAlreadyExists`` will be raised. To change the ``key`` on the fly you have to explictly perform ``del SomeEncryptedField.key`` and then set this property to desired value again.
 
 .. _Installation:
 
@@ -99,4 +100,27 @@ Finally, save and retrieve data in a Peewee's usual manner
 Key Derivation Example
 ----------------------
 
+Example Key Derivation Function baded on Pycrypto_ module.
 
+`Please take look at this Gist <https://gist.github.com/brake/18ab6f269fdef090034d1805308422c6>`_ - it can contain more actual version of code below.
+
+.. code-block:: python
+
+  from binascii import unhexlify
+  from functools import partial
+  from Crypto.Protocol import KDF
+  from Crypto.Hash import SHA512, HMAC
+  
+  _SALT = unhexlify('48B755AB80CD1C3DA61182D3DCD2E3A2CA869B783618FF6551FB4B0CDC3B8066')  # some salt
+  _KEY_LENGTH = 32
+  
+  key_derivation_fn = partial(        
+      KDF.PBKDF2,
+      salt=_SALT,
+      dkLen=_KEY_LENGTH,
+      count=5000,
+      prf=lambda p,s: HMAC.new(p,s,SHA512).digest()
+  )
+
+  # KDF usage
+  SecureTable.sensitive_data.key = key_derivation_fn(text_password)
