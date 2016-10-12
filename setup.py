@@ -16,7 +16,7 @@ links = [
     'git+https://github.com/heroku/fernet-py#egg=fernet',
 ]
 
-version = '0.0.1'
+version = '0.0.2'
 
 setup(
     name='peewee_encrypted_field',
