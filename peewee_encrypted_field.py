@@ -33,6 +33,7 @@ Uses simple fernet implementation https://github.com/heroku/fernet-py
 Idea caught from SQLAlchemy.
 """
 
+from __future__ import unicode_literals
 import fernet
 import fernet.secret as secret
 from peewee import *
